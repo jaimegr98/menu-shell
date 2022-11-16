@@ -1,0 +1,46 @@
+salir="n"
+while [ $salir != "y" ]
+ do
+ echo
+ echo -------- MENU -------------------
+ echo 1. Consultar usuario y su grupo principal
+ echo 2. Crear usuario
+ echo 3. Borrar usuario
+ echo s. Salir
+ echo --------------------------------
+ echo "Elige una opcion del menu: "
+ read -p resp
+ case $resp in
+ s) salir="y";;
+ [1]) echo Introduce el nombre de usuario:
+ read user
+ case $user in
+ *) var1=`cut -d ":" -f 1 /etc/passwd | grep -w $user`
+ if [ $var1 = $user ]
+ then
+ idgrupo=`cut -d ":" -f 1,4 /etc/passwd | grep -w $user | cut -d ":" -f 2`
+ grupoprin=`cut -d ":" -f 1,3 /etc/group | grep -w $idgrupo | cut -d ":" -f 1`
+ echo El usuario $user exite y su grupo principal es $grupoprin
+ else
+ echo El usuario $user no exite
+ echo Quieres crear uno? [s/n]
+ read crear
+  if [ $crear = "s"]
+  then  
+  echo Introduce un nombre de usuario:
+  $user in
+  sudo adduser $user
+  echo Usuario $user creado
+  fi
+  fi;;
+ [2]) echo Introduce un nombre de usuario que quieres crear:
+      $user in
+      sudo adduser $user
+      echo Usuario $user creado;;
+ [3]) echo Introduce el nombre de usuario que quieres borrar:
+      $user in
+      sudo userdel $user
+      echo Usuario $user borrado;;
+ *) echo Introduzca un valor correcto;;
+esac
+done
